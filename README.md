@@ -9,11 +9,13 @@ INSTALLATION
 Use Ant to builld BTCSim.jar file:
 
 git clone https://github.com/7u83/BTCSim
+
 cd BTCSim
+
 ant
 
 Alternatively open the Netbeans project and 
-buid it there.
+build it there.
 
 
 
