@@ -33,6 +33,9 @@ import btcsim.Block.BlockType;
  * @author 7u83 <7u83@mail.ru>
  */
 public class Net {
+    
+    // Number of outgoing connections a node sould establish
+    private final int NUM_CONNS = 8;
 
     Random random = new Random();
     ArrayList<Node> nodes;
@@ -120,7 +123,7 @@ public class Net {
 
     void connectNodes() {
         for (Node node : nodes) {
-            node.connect(10);
+            node.connect(NUM_CONNS);
         }
     }
     
