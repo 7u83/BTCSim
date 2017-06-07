@@ -38,39 +38,41 @@ public class Node {
     Block distrib;
     protected int id;
     protected Net net;
-    String name=null;
-    
+    String name = null;
+
     int rejected = 0;
 
     public Node() {
         chain = new BlockChain();
         distrib = null;
     }
-    
-    public Node (String name){
-       this();
-       setName(name);
+
+    public Node(String name) {
+        this();
+        setName(name);
     }
-    
-    public final void setNetAndId(Net net, int id){
-        this.net=net;
-        this.id=id;
+
+    public final void setNetAndId(Net net, int id) {
+        this.net = net;
+        this.id = id;
     }
-    
+
     /**
      * Set the name of the node
+     *
      * @param name name to set
      */
-    public final void setName(String name){
-        this.name=name;
+    public final void setName(String name) {
+        this.name = name;
     }
 
-
+ 
     /**
-     * Verfiy a block 
-     * Override this method to implement own verfifying such as UASF
+     * Verfiy a block Override this method to implement own verfifying such as
+     * UASF
+     *
      * @param block
-     * @return true: accept the block, false: reject block 
+     * @return true: accept the block, false: reject block
      */
     boolean checkBlock(Block block) {
         return true;
@@ -82,9 +84,8 @@ public class Node {
      * @param block the block sent to this node
      */
     public void receiveBlock(Block block) {
-        
+
         if (!checkBlock(block)) {
-           // System.out.printf("RTeject %s\n", block.type.toString());
             rejected++;
             return;
         }
@@ -97,6 +98,16 @@ public class Node {
             distrib = block;
         }
 
+    }
+    
+    /**
+     * Check if a block is in nodes data base
+     * @param hash Hash of block
+     * @return true if block is in database, false if not.
+     */
+    public boolean hasBlock(int hash){
+        Block b = chain.getBlock(hash);
+        return b!=null;
     }
 
     /**
@@ -118,8 +129,6 @@ public class Node {
         return true;
     }
 
-    
-    
     Block mineBlock() {
         Block b = net.mineBlock(BlockType.Std, chain.front_block);
 //        receiveBlock(b);
