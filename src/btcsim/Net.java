@@ -7,7 +7,7 @@
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * copies of the Software, and to permit persoconnectns to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
  * The above copyright notice and this permission notice shall be included in
@@ -84,6 +84,7 @@ public class Net {
         boolean dist;
         do {
             dist = false;
+            System.out.printf("Distribute round over %d \n",nodes.size());
             for (Node n: nodes){
                 if (n.distributeBlock()){
                     dist=true;
@@ -128,7 +129,7 @@ public class Net {
     }
     
     
-    void showChains(){
+    public void showChains(){
         for (Miner m: miners){
             BlockChain ch = m.node.chain;
             System.out.printf("%s: block %d, hash %d, rejected %d, reorgs %d\n",
@@ -136,6 +137,26 @@ public class Net {
                     ch.front_block.height,
                     ch.front_block.hash,
                     m.node.rejected,
+                    ch.reorgs);
+            
+        }
+        
+    }
+
+
+    public void showNodes(){
+        for (Node n: nodes){
+            BlockChain ch = n.chain;
+            String name;
+            if (n.name==null)
+                name="Anon";
+            else
+                name=n.name;
+            System.out.printf("%s: block %d, hash %d, rejected %d, reorgs %d\n",
+                    name,
+                    ch.front_block.height,
+                    ch.front_block.hash,
+                    n.rejected,
                     ch.reorgs);
             
         }
