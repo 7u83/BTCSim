@@ -23,14 +23,16 @@ RUNNING THE SIMULATION
 ----------------------
 
 Run the jar from command line or run the project 
-in Netbeans.
+in Netbeans (with one of the example files found
+in the examples folder)
 
-java -jar dist/BTCSim.jar
+java -jar dist/BTCSim.jar examples/examples.csv
 
 
 
 To modify number of UASF nodes, SegWit or Non-SegWit
-miner edit defaul.net
+miners create your own csv file like
+examples/examples.csv. 
 
 
 http://blog.cauwersin.com
