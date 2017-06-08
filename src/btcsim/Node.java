@@ -165,7 +165,7 @@ public class Node {
 
     Block mineBlock() {
         Block b = net.mineBlock(BlockType.Std, chain.front_block);
-//        receiveBlock(b);
+        b.miner=name;
         return b;
     }
 
