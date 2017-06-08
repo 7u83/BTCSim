@@ -95,8 +95,9 @@ public class Net {
 
     /**
      * Mine a block and distribute it
+     * @return The mined block
      */
-    public void runStep() {
+    public Block runStep() {
         // dice the next node to mine a block
         int r = random.nextInt(hashpowersum);
 
@@ -117,8 +118,8 @@ public class Net {
         
         distributeBlocks();
         
-        System.out.printf("%s has mined a %s block\n", miner.node.name, b.type.toString());
-
+        return b;
+        
     }
 
     void connectNodes() {
