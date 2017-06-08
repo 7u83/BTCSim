@@ -23,69 +23,149 @@
  */
 package btcsim;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+
 /**
  *
  * @author 7u83 <7u83@mail.ru>
  */
 public class BTCSim {
 
-
-
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
+
         // Setup network
         Net net = new Net();
-        
-        
-        // Add some non-mining fullnodes
-        for (int i = 0; i < 1000; i++) {
-            net.addNode(new Node());
-        }
-        
-        // Add some UASF nodes
-        for (int i = 0; i < 9000; i++) {
-            net.addNode(new UASFNode());
-        }
-        
-        
-        // Add some mining nodes with apropriate hashing power
-        net.addMiningNode(new Node("AntPool"), 159);
-        net.addMiningNode(new Node("BTC.TOP"), 142);        
-        
-        
-        net.addMiningNode(new SegWitNode("F2Pool"), 97);
-        net.addMiningNode(new SegWitNode("BTCC"), 76);        
-        net.addMiningNode(new SegWitNode("Bitfury"), 73);
 
-        net.addMiningNode(new Node("Bixibn"), 73);        
-        net.addMiningNode(new Node("BTC.com"), 64);
-        net.addMiningNode(new Node("Slush"), 53);
-        net.addMiningNode(new Node("ViaBTC"), 51);
-        
-        net.addMiningNode(new Node("BW.COM"), 45);
-        net.addMiningNode(new SegWitNode("BitClub"), 38);
-        
-        net.addMiningNode(new Node("OtherNodes"), 250);
-        
+        readNodes("default.net", net);
 
-        net.addMiningNode(new UASFNode("UASFPool"), 7);
 
-        
-                      
-        // Let nodes connect randomly
         net.connectNodes();
-        
- 
-        for (int i=0; i<4320; i++){
+
+        for (int i = 0; i < 1000; i++) {
+            // Let nodes connect randomly
+            net.connectNodes();
+            // mine a  block and distribute its
             net.runStep();
         }
 
         System.out.printf("========================================\n");
         net.showChains();
+      //  System.out.printf("----------------------------------------\n");
+      //  net.showNodes();
 
+    }
+
+    /**
+     * Read nodes from configuration file
+     *
+     * @param filename filename
+     * @param net Net, where to add the nodes
+     */
+    static void readNodes(String filename, Net net) {
+        try {
+            FileInputStream stream = new FileInputStream(filename);
+            BufferedReader br = new BufferedReader(new InputStreamReader(stream));
+
+            String line;
+            int linenr = 0;
+            while ((line = br.readLine()) != null) {
+                linenr++;
+                String[] sl = line.split(",");
+                // ignore empty lines
+                if (sl[0].trim().length() == 0) {
+                    continue;
+                }
+
+                // ignore comments (lines starting with #)
+                if (sl[0].charAt(0) == '#') {
+                    System.out.printf("Comment\n");
+                    continue;
+                }
+
+                // ignore lines with less than two entries
+                if (sl.length < 2) {
+                    continue;
+                }
+
+                // Create a node based on the first field
+                Node node;
+                node = getNode(sl[0].trim());
+                if (node == null) {
+                    System.err.printf("Error in %s at line %d: unknown node type '%s'\n", filename, linenr, sl[0].trim());
+                    continue;
+                }
+
+                int num_nodes;
+                try {
+                    num_nodes = Integer.parseInt(sl[1].trim());
+                } catch (Exception e) {
+                    System.err.printf("Error in %s at line %d: integer expected, but got '%s'\n", filename, linenr, sl[1].trim());
+                    continue;
+                }
+
+                // read out the name
+                String name = null;
+                if (sl.length > 2) {
+                    name = sl[2].trim();
+                }
+
+                int hashpower = 0;
+                if (sl.length > 3) {
+                    try {
+                        hashpower = Integer.parseInt(sl[3].trim());
+                    } catch (Exception e) {
+                        System.err.printf("Error in %s at line %d: integer expected, but got '%s'\n", filename, linenr, sl[1].trim());
+                        continue;
+                    }
+
+                }
+
+                System.out.printf("Adding %d %s-type nodes with hp %d\n",
+                        num_nodes,
+                        sl[0].trim(),
+                        hashpower);
+
+                // Add the nodes
+                for (int i = 0; i < num_nodes; i++) {
+
+                    node.setName(name);
+                    if (hashpower > 0) {
+                        net.addMiningNode(node, hashpower);
+                    } else {
+                        net.addNode(node);
+                    }
+                    node = getNode(sl[0].trim());
+                }
+
+            }
+
+            br.close();
+
+        } catch (Exception e) {
+//            System.out.printf("FILE: %s\n", filename.getAbsoluteFile());
+//            System.err.printf("%s: %s\n", fileNameDefined, e.getMessage());
+            e.printStackTrace();
+        }
+
+    }
+
+    static Node getNode(String name) {
+        if (name.equals("Node")) {
+            return new Node("hat");
+        }
+        if (name.equals("SegWitNode")) {
+            return new SegWitNode("tim");
+        }
+        if (name.equals("UASFNode")) {
+            return new UASFNode("tom");
+        }
+
+        return null;
     }
 
 }
