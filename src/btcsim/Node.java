@@ -66,7 +66,6 @@ public class Node {
         this.name = name;
     }
 
- 
     /**
      * Verfiy a block Override this method to implement own verfifying such as
      * UASF
@@ -76,6 +75,36 @@ public class Node {
      */
     boolean checkBlock(Block block) {
         return true;
+    }
+
+    boolean addBlock(Block block) {
+        if (chain.addBlock(block)) {
+            return true;
+        }
+
+        // Block couldn't be added, means there was no previous 
+        // block in chain
+        // try to get the previous block from our connected nodes
+        Block prevblock = null;
+
+        for (Node n : connections) {
+            prevblock = n.getBlock(block.prevhash);
+            if (prevblock == null)
+                continue;
+            if (!checkBlock(prevblock))
+                return false;
+            else 
+                break;
+        }
+        if (prevblock ==null)
+            return false;
+        
+        if (!addBlock(prevblock)){
+            return false;
+        }
+  
+        return chain.addBlock(block);
+  
     }
 
     /**
@@ -94,20 +123,25 @@ public class Node {
             return;
         }
 
-        if (chain.addBlock(block)) {
+        if (addBlock(block)) {
             distrib = block;
         }
-
-    }
     
+    }
+
+    public Block getBlock(int hash) {
+        return chain.getBlock(hash);
+    }
+
     /**
      * Check if a block is in nodes data base
+     *
      * @param hash Hash of block
      * @return true if block is in database, false if not.
      */
-    public boolean hasBlock(int hash){
-        Block b = chain.getBlock(hash);
-        return b!=null;
+    public boolean hasBlock(int hash) {
+        Block b = getBlock(hash);
+        return b != null;
     }
 
     /**
