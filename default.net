@@ -1,0 +1,22 @@
+#BTC net definition
+
+#
+#Node tye	number	name		hashing power
+#
+UASFNode,	1500,	uasfnode
+Node,		8500,	stdnode      
+
+Node,		1, 	AntPool,	159
+Node, 		1,	BTC.TOP,	142
+SegWitNode,	1,	F2Pool,		97
+SegWitNode,	1, 	BTCC, 		76
+SegWitNode,	1, 	Bitfury,	73
+Node,		1, 	Bixin,		73
+Node,		1, 	BTC.com,	64
+Node,		1, 	Slush,		53
+Node,		1, 	ViaBTC,		51
+Node,		1, 	BW.COM,		45
+SegWitNode,	1,	BitClub,	38
+Node,		1, 	OtherNodes,	250
+UASFNode,   	1, 	UASFPool,	50
+
