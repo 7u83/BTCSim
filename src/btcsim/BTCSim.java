@@ -33,6 +33,15 @@ import java.io.InputStreamReader;
  */
 public class BTCSim {
 
+    static class Settings {
+
+        String filename = null;
+        int num_blocks = 1000;
+        boolean verbose = false;
+        boolean showall = false;
+        boolean showblocks = false;
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -41,22 +50,40 @@ public class BTCSim {
         // Setup network
         Net net = new Net();
 
-        readNodes("default.net", net);
+        Settings s = readSettings(args);
 
+        if (s == null) {
+            return;
+        }
+
+        if (!readNodes(s.filename, net,s.verbose)) {
+            return;
+        }
 
         net.connectNodes();
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < s.num_blocks; i++) {
+
+            if (!s.showblocks)
+                System.out.printf("\rMining block %d from %d", i + 1, s.num_blocks);
+
             // Let nodes connect randomly
             net.connectNodes();
             // mine a  block and distribute its
-            net.runStep();
-        }
 
-        System.out.printf("========================================\n");
-        net.showChains();
-      //  System.out.printf("----------------------------------------\n");
-      //  net.showNodes();
+            Block b = net.runStep();
+            if (s.showblocks)
+                System.out.printf("%s has mined a %s block\n", b.miner, b.type.toString());
+            
+        }
+        System.out.printf("\n");
+
+        System.out.printf("Result:\n");
+        if (s.showall) {
+            net.showNodes();
+        } else {
+            net.showChains();
+        }
 
     }
 
@@ -66,7 +93,7 @@ public class BTCSim {
      * @param filename filename
      * @param net Net, where to add the nodes
      */
-    static void readNodes(String filename, Net net) {
+    static boolean readNodes(String filename, Net net, boolean verbose) {
         try {
             FileInputStream stream = new FileInputStream(filename);
             BufferedReader br = new BufferedReader(new InputStreamReader(stream));
@@ -125,11 +152,19 @@ public class BTCSim {
 
                 }
 
-                System.out.printf("Adding %d %s-type nodes with hp %d\n",
+                if (verbose){
+                    String s;
+                    if (num_nodes==1)
+                        s="";
+                    else
+                        s="s";
+                    System.out.printf("Adding %d %s%s with hashing power %d\n",
                         num_nodes,
                         sl[0].trim(),
+                        s,
                         hashpower);
-
+                }
+                
                 // Add the nodes
                 for (int i = 0; i < num_nodes; i++) {
 
@@ -147,11 +182,10 @@ public class BTCSim {
             br.close();
 
         } catch (Exception e) {
-//            System.out.printf("FILE: %s\n", filename.getAbsoluteFile());
-//            System.err.printf("%s: %s\n", fileNameDefined, e.getMessage());
-            e.printStackTrace();
+            System.err.printf("Error: %s\n", e.getMessage());
+            return false;
         }
-
+        return true;
     }
 
     static Node getNode(String name) {
@@ -167,8 +201,66 @@ public class BTCSim {
 
         return null;
     }
-    
-    
-    
+
+    static void printUsage() {
+        System.out.print(
+                "Usage:\n"
+                + " BTCSim [options] <filename>\n\n"
+                + "filename = File defining the net.\n"
+                + "Options:\n"
+                + "  -n #: Number of blocks to mine, default is 1000\n"
+                + "  -v: be verbose\n"
+                + "  -a: show results for all nodes\n"
+                + "  -b: show mined blocks\n"
+        );
+    }
+
+    static Settings readSettings(String[] args) {
+        if (args.length == 0) {
+            printUsage();
+            return null;
+        }
+
+        Settings s = new Settings();
+
+        for (int i = 0; i < args.length; i++) {
+            String arg = args[i];
+            if (arg.equals("-n")) {
+                try {
+                    s.num_blocks = Integer.parseInt(args[i + 1]);
+                } catch (Exception e) {
+                    System.err.printf("Error in option -n ##\n");
+                    return null;
+
+                }
+                i = i + 1;
+                continue;
+            }
+            if (arg.equals("-v")) {
+                s.verbose = true;
+                continue;
+            }
+            if (arg.equals("-b")) {
+                s.showblocks = true;
+                continue;
+            }
+            if (arg.equals("-a")) {
+                s.showall
+                        = true;
+                continue;
+            }
+
+            
+            s.filename = arg;
+        }
+
+        if (s.filename == null) {
+            System.err.printf("Error: no filename given\n");
+            return null;
+
+        }
+
+        return s;
+    }
 
 }
