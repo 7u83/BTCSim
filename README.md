@@ -1,7 +1,7 @@
 # BTCSim
 
 Bitcoin Network Simulation to simulate the 
-influence of UASF nodes.
+impact of UASF nodes.
 
 INSTALLATION
 ------------
