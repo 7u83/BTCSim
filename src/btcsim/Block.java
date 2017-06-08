@@ -34,6 +34,7 @@ public class Block {
         Std
     }
     
+    String miner;
     BlockType type;
     int height, hash, prevhash;
 
@@ -42,5 +43,6 @@ public class Block {
         this.height = height;
         this.hash = hash;
         this.prevhash = prevhash;
+        this.miner="Unknown";
     }
 }
