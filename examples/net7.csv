@@ -1,0 +1,4 @@
+UASFNode,	8000,uasfnode,0
+Node,		2000,stdnode,0
+Node,	 	5,OtherPools,70
+UASFNode,	5,USAFPools,30

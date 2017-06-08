@@ -1,0 +1,5 @@
+UASFNode,	5000,uasfnode,0
+Node,		5000,stdnode,0
+SegWitNode,	5,SegWitPools,25
+Node,	 	5,OtherPools,70
+UASFNode,	5,USAFPools,5
