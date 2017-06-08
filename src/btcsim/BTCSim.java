@@ -159,13 +159,16 @@ public class BTCSim {
             return new Node("hat");
         }
         if (name.equals("SegWitNode")) {
-            return new SegWitNode("tim");
+            return new SegWitNode();
         }
         if (name.equals("UASFNode")) {
-            return new UASFNode("tom");
+            return new UASFNode();
         }
 
         return null;
     }
+    
+    
+    
 
 }
