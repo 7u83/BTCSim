@@ -65,7 +65,7 @@ public class BTCSim {
         for (int i = 0; i < s.num_blocks; i++) {
 
             if (!s.showblocks)
-                System.out.printf("\rMining block %d from %d", i + 1, s.num_blocks);
+                System.out.printf("\rMining block %d out of %d", i + 1, s.num_blocks);
 
             // Let nodes connect randomly
             net.connectNodes();
@@ -245,8 +245,7 @@ public class BTCSim {
                 continue;
             }
             if (arg.equals("-a")) {
-                s.showall
-                        = true;
+                s.showall = true;
                 continue;
             }
 
