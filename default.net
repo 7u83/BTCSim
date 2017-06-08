@@ -1,7 +1,7 @@
 #BTC net definition
 
 #
-#Node tye	number	name		hashing power
+#Node type	number	name		hashing power
 #
 UASFNode,	1500,	uasfnode
 Node,		8500,	stdnode      
