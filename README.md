@@ -30,7 +30,7 @@ java -jar dist/BTCSim.jar
 
 
 To modify number of UASF nodes, SegWit or Non-SegWit
-miner edit src/btcsim/BTCSim.java.
+miner edit defaul.net
 
 
 http://blog.cauwersin.com
