@@ -1,11 +1,8 @@
-#BTC net definition
 
-#
-#Node type	number	name		hashing power
-#
-UASFNode,	1500,	uasfnode
-Node,		8500,	stdnode      
+#Node type,	number,	name,		hashing power,
 
+UASFNode,	1500,	uasfnode,	0
+Node,		8500,	stdnode,	0      
 Node,		1, 	AntPool,	159
 Node, 		1,	BTC.TOP,	142
 SegWitNode,	1,	F2Pool,		97
